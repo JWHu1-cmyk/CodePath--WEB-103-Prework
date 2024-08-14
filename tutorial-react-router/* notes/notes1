@@ -1,0 +1,306 @@
+
+
+
+***
+// within the 'https://reactrouter.com/en/main/start/tutorial#deleting-records'
+
+```
+URL segments, layouts, and data are more often than not coupled (tripled?) together. We can see it in this app already:
+```
+// Hu: review this section's corsponding tablet.
+
+```
+We can test this out by clicking the "New" button in our app. The app should blow up because the Vite server isn't configured to handle a POST request (it sends a 404, though it should probably be a 405 🤷).
+```
+// Hu: review this to review server request.
+
+
+
+***
+// Hu: look into this
+// routes/contact.jsx
+
+import { getContact } from "../contacts";
+// contacts.js
+
+export async function loader({ params }) {
+  const contact = await getContact(params.contactId);
+  return { contact };
+  // used as 'loader as contactLoader' in main.jsx.
+  // contactLoader parameter is `:contactId`.
+}
+
+
+
+***
+// Hu: review this to understand routing terminology
+// routes/root.jsx
+import { getContacts, createContact } from "../contacts";
+
+    export async function action() {
+    const contact = await createContact();
+    return { contact };
+    }
+
+    export default function Root() {
+    const { contacts } = useLoaderData();
+    return (
+        <>
+        // ...
+            <Form method="post">
+                <button type="submit">New</button>
+            </Form>
+
+// contacts.js
+    export async function createContact() {
+    await fakeNetwork();
+    let id = Math.random().toString(36).substring(2, 9);
+    let contact = { id, createdAt: Date.now() };
+    let contacts = await getContacts();
+    contacts.unshift(contact);
+    await set(contacts);
+    return contact;
+    }
+
+    function set(contacts) {
+    return localforage.setItem("contacts", contacts);
+    }
+    // localforage.setItem("contacts", contacts): This method is used to store the contacts data under the key "contacts".
+
+// main.jsx
+    import Root, {
+    loader as rootLoader,
+    action as rootAction,
+    } from "./routes/root";
+
+    const router = createBrowserRouter([
+    {
+        path: "/",
+        element: <Root />,
+        errorElement: <ErrorPage />,
+        loader: rootLoader,
+        action: rootAction,
+
+
+
+***
+// Hu: internalize this concept
+Without JavaScript, when a form is submitted, the browser will create FormData and set it as the body of the request when it sends it to the server. As mentioned before, React Router prevents that and sends the request to your action instead, including the FormData.
+
+
+
+***
+// Hu: look into the id
+contact.jsx
+<div id="contact">
+
+
+
+***
+export async function loader({ params }) {
+  const contact = await getContact(params.contactId);
+  return { contact };
+  // used as 'loader as contactLoader' in main.jsx.
+  // contactLoader parameter is `:contactId`.
+}
+// wtf is the parm passed into loader
+
+
+
+***
+// within edit.jsx
+          <Form action="edit">
+            <button type="submit">Edit</button>
+          </Form>
+  // I want to know how edit redirect work
+
+// within routes/root
+export async function action() {
+  const contact = await createContact();
+  // return { contact };
+  return redirect(`/contacts/${contact.id}/edit`);
+}
+
+
+
+***
+// within edit.jsx
+export default function EditContact() {
+const { contact } = useLoaderData();
+// contactloader used in contact.jsx is used as loader in main.jsx for element: <EditContact />;
+// useLoaderData is a hook provided by the react-router-dom library (version 6 and later) that allows components to access data that was preloaded for the route.
+
+
+
+***
+// Hu: wtf is params? 
+
+export async function action({ request, params }) {
+  const formData = await request.formData();
+  const updates = Object.fromEntries(formData);
+  await updateContact(params.contactId, updates);
+  return redirect(`/contacts/${params.contactId}`);
+}
+
+export async function loader({ params }) {
+  const contact = await getContact(params.contactId);
+  return { contact };
+  // used as 'loader as contactLoader' in main.jsx.
+  // contactLoader parameter is `:contactId`.
+}
+
+
+
+***
+
+Note: contact route UI
+Note: nested route
+// review these sections on creating new pages vs have page nested in root
+
+Note: URL Param in loader
+
+Note: Active Link Styling
+Nav
+
+Note: Global pending UI
+useNavigation
+
+Note: Deleting Records
+// on it
+
+Note: index route
+// index.js
+
+Note: cancel button
+without the need of redirect
+
+Note: synchronizing urls to form states
+the URL and our form state are out of sync.
+
+
+
+***
+Because this is a GET, not a POST, React Router does not call the action. Submitting a GET form is the same as clicking a link: only the URL changes. That's why the code we added for filtering is in the loader, not the action of this route.
+
+<Form id="search-form" role="search">
+
+Note that this form is different from the others we've used, it does not have <form method="post">. The default method is "get".
+
+Because this is a GET, not a POST, React Router does not call the action. Submitting a GET form is the same as clicking a link: only the URL changes. That's why the code we added for filtering is in the loader, not the action of this route.
+
+
+
+
+***
+note: synchronizing urls to form states
+
+🤔 Shouldn't you use a controlled component and React State for this?
+
+A controlled component in React is a component that does not maintain its own internal state but instead relies on its parent component to manage its state. This is done by setting the value of the component's state to a prop passed down from the parent component and using callbacks to update the state.
+
+  const handleChange = (event) => {
+    setName(event.target.value);
+  };
+        <input type="text" value={name} onChange={handleChange} />
+
+
+
+***
+# hook, useEffect
+The useEffect hook in your code snippet is used to update the value of an input element with the ID q whenever the variable q changes. Here’s a detailed explanation of how this works and what it does:
+useEffect Hook:
+The useEffect hook is used to perform side effects in function components. It runs after the component renders.
+
+Effect Function:
+`
+() => {
+  document.getElementById("q").value = q;
+}
+`
+This is the effect function. It contains the logic to update the value of the input element.
+document.getElementById("q") selects the input element with the ID q.
+.value = q sets the value of the selected input element to the current value of the variable q.
+
+Dependencies Array:
+`[q]`
+The dependencies array contains q.
+The effect function will run whenever the value of q changes.
+
+in the function () => { document.getElementById("q").value = q; }, q is indeed a variable.
+
+Updating DOM: The useEffect hook updates the input field’s value to match the q variable whenever q changes.
+
+
+
+***
+# react rerendering
+In React, a component re-renders when its state or props change. When you interact with the UI by clicking buttons or other elements that trigger state changes, these changes can cause React to re-render the component to reflect the updated state.
+
+Key Mechanisms for Re-rendering
+State Changes:
+When you call setState (or useState in functional components), React schedules a re-render of the component to reflect the new state.
+  const [count, setCount] = useState(0);
+
+Props Changes:
+When a component receives new props from its parent, it re-renders to reflect the new props.
+  function ParentComponent() {
+    const [value, setValue] = useState('initial value');
+    return <ChildComponent value={value} />;
+  }
+
+***
+Backward Button (Browser Navigation)
+When you click the browser's backward button, the URL changes, which can trigger a re-render if your component relies on the URL or routing for its state. In a React application using react-router-dom, for example, a URL change typically triggers a re-render of the components associated with the new route.
+
+Explanation
+Router: The BrowserRouter component listens for URL changes.
+Route: When the URL changes, the appropriate route is matched, and the corresponding component is rendered.
+Re-rendering: Clicking the browser's backward button changes the URL, triggering the router to update the current route and re-render the associated component.
+
+
+
+***
+note:
+submitting form onChange
+// hu: review this. now this is interesting.
+
+
+
+***
+const navigation = useNavigation();
+
+useNavigation is a custom hook, probably provided by a routing library such as react-router-dom.
+This hook returns an object that provides information about the current navigation state. This could include details about the current URL, query parameters, and navigation history.
+
+navigation.location:
+This checks if the location property exists on the navigation object. The location property typically contains information about the current URL, including the pathname and query string.
+new URLSearchParams(navigation.location.search):
+This creates a URLSearchParams object from the query string (navigation.location.search). The URLSearchParams API allows you to work with query parameters more easily.
+.has("q"):
+The has method checks if the query parameter "q" exists in the query string.
+
+navigation.location:
+
+navigation.location is an object that contains information about the current location (URL). This is similar to the window.location object in the browser, but is provided by the routing library for consistency and ease of use within the application.
+location.search:
+
+location.search is a property of the location object that contains the query string part of the URL. The query string includes everything after the ? in the URL.
+
+Combined Logic:
+navigation.location && new URLSearchParams(navigation.location.search).has("q"):
+This logical AND expression ensures that both navigation.location is truthy (i.e., it exists) and that the query string contains a "q" parameter.
+If both conditions are true, searching is set to true, indicating that a search query is active. Otherwise, searching is set to false.
+
+
+
+
+wihtin root.jsx, <Form method="post">, calls action;
+within root.jsx, <Form id="search-form" role="search">, Note that this form is different from the others we've used, it does not have <form method="post">. The default method is "get". Because this is a GET, not a POST, React Router does not call the action. Submitting a GET form is the same as clicking a link: only the URL changes;
+
+
+
+
+***
+note: jsx route
+// managing route with jsx element
+

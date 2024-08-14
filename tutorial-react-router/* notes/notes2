@@ -1,0 +1,72 @@
+ 
+Axios provides convenient methods for each of the HTTP request methods. To perform a POST request, you use the .post() method, and so on:
+axios.post()   // to perform POST request
+axios.get()    // to perform GET request
+axios.put()    // to perform PUT request
+axios.delete() // to perform DELETE request
+axios.patch()  // to perform PATCH request
+
+ # using npm
+```
+npm install axios
+
+// https://blog.logrocket.com/how-to-use-axios-post-requests/
+// note: Sending an Axios POST request in React
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const userData = {
+      email: data.email,
+      password: data.password
+    };
+    axios.post("https://reqres.in/api/login", userData).then((response) => {
+      console.log(response.status, response.data.token);
+    });
+  };
+```
+
+# Using the async/await syntax with Axios
+```
+const handleSubmit = async () => {
+    try {
+      const response = await axios.post(url, userData);
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  ```
+From the above example, we are awaiting a response from our POST request before we can perform an operation on the response. It works like the .then() method we saw in the previous example.
+
+
+```
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const userData = {
+      email: data.email,
+      password: data.password
+    };
+    axios
+      .post("https://reqres.in/api/login", userData)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log(error.response);
+          console.log("server responded");
+        } else if (error.request) {
+          console.log("network error");
+        } else {
+          console.log(error);
+        }
+      });
+  };
+
+```
+      const response = await axios.post(url, userData);
+// we are awaiting a response from our POST request before we can perform an operation on the response. It works like the .then()
+
+// in the if condition, we check if there is a response, that is if our request was sent and the server responded with an HTTP status code outside the 2xx range.
+In the else if condition, we checked to see if the request was made, but we received no response. This error is usually due to a network error or being offline.
+
