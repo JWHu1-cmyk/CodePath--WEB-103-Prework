@@ -1,20 +1,8 @@
-// ***
-// equivalent of EditCreator.jsx;
-// basically the same I feel;
-// edit: name, url, description, and imageURL;
-
 import {
-  Outlet,
-  NavLink,
-  Link,
-  useLoaderData,
   Form,
-  redirect,
-  useNavigation,
-  useSubmit,
   useNavigate,
+  redirect,
 } from "react-router-dom";
-
 import { createCreator } from "../Creator1.js";
 
 export async function action({ request }) {
@@ -31,36 +19,64 @@ export async function action({ request }) {
     alert("Error inserting creator: " + error.message);
     return redirect(`/`);
   }
-
 }
 
 export default function AddCreator() {
   const navigate = useNavigate();
 
   return (
-    <Form method="post" id="contact-form">
-      <label>
-        <span>Name: </span>
-        <input name="name" placeholder="name" />
-      </label>
-      <label>
-        <span>URL: </span>
-        <input name="url" placeholder="url" />
-      </label>
-      <label>
-        <span>Description: </span>
-        <textarea name="description" rows={6} />
-      </label>
-      <label>
-        <span>Image URL: </span>
-        <input name="imageURL" placeholder="imageURL" />
-      </label>
-      <p>
-        <button type="submit">Save</button>
-        <button type="button" className="cancel-button" onClick={() => navigate(-1)}>Cancel</button>
-      </p>
+    <Form method="post" id="contact-form" className="container mt-5">
+      <div className="mb-3">
+        <label className="form-label">
+          <span>Name: </span>
+        </label>
+        <input 
+          name="name" 
+          placeholder="Enter name" 
+          className="form-control" 
+        />
+      </div>
+      <div className="mb-3">
+        <label className="form-label">
+          <span>URL: </span>
+        </label>
+        <input 
+          name="url" 
+          placeholder="Enter URL" 
+          className="form-control" 
+        />
+      </div>
+      <div className="mb-3">
+        <label className="form-label">
+          <span>Description: </span>
+        </label>
+        <textarea 
+          name="description" 
+          rows={6} 
+          placeholder="Enter description"
+          className="form-control" 
+        />
+      </div>
+      <div className="mb-3">
+        <label className="form-label">
+          <span>Image URL: </span>
+        </label>
+        <input 
+          name="imageURL" 
+          placeholder="Enter Image URL" 
+          className="form-control" 
+        />
+      </div>
+      <div className="d-flex justify-content-between">
+        <button type="submit" className="btn btn-primary">Save</button>
+        <button 
+          type="button" 
+          className="btn btn-secondary" 
+          onClick={() => navigate(-1)}
+        >
+          Cancel
+        </button>
+      </div>
     </Form>
   );
 }
-
-// <form> works not <Form>

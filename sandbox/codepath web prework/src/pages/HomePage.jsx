@@ -1,29 +1,24 @@
 import React from "react";
-import {
-  Outlet,
-  NavLink,
-  Link,
-  useLoaderData,
-  Form,
-  redirect,
-  useNavigation,
-  useSubmit,
-} from "react-router-dom";
+import { Outlet, Link } from "react-router-dom";
 
 export default function Root() {
   return (
-    <div id="detail" className="creatorverse">
-      <h1>CREATORVERSE</h1>
-      <div className="buttons">
-        <Link to="showCreators">
-          <button type="button">VIEW ALL CREATORS</button>
+    <div className="container mt-5">
+      <h1 className="text-center mb-4">CREATORVERSE</h1>
+      <div className="d-flex justify-content-center mb-4">
+        <Link to="showCreators" className="me-2">
+          <button type="button" className="btn btn-primary">
+            VIEW ALL CREATORS
+          </button>
         </Link>
-        <Link to="addCreator">
-          <button type="button">ADD A CREATOR</button>
+        <Link to="addCreator" className="ms-2">
+          <button type="button" className="btn btn-success">
+            ADD A CREATOR
+          </button>
         </Link>
       </div>
       <div>
-        <Outlet/>
+        <Outlet />
       </div>
     </div>
   );

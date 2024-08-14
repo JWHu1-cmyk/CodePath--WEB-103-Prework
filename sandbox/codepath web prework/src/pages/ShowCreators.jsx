@@ -3,10 +3,6 @@ import {
   Outlet,
   NavLink,
   useLoaderData,
-  Form,
-  redirect,
-  useNavigation,
-  useSubmit,
 } from "react-router-dom";
 import { getCreators } from "../Creator1";
 
@@ -20,81 +16,41 @@ export async function loader() {
   }
 }
 
-// export async function action() {
-//   const contact = await createContact();
-//   return redirect(`/contacts/${contact.id}/edit`);
-// }
-
 export default function Root() {
   const { contacts } = useLoaderData();
 
   return (
-    <>
-      <nav>
+    <div className="container mt-4">
+      <nav className="mb-4">
         {contacts && contacts.length ? (
-        <>
-          <div class="spacer"></div>
-
-          <ul>
-            {contacts.map((contact) => (
-              <>
-              <li key={contact.id}>
-                <NavLink
-                  to={`./creators/${contact.id}`}
-                  className={({ isActive, isPending }) =>
-                    isActive ? "active" : isPending ? "pending" : ""
-                  }
-                >
-                  <div>
-                  {contact.name ? (
-                    <>
-                      Name:
-                      {contact.name},
-                      {" "}
-                    </>
-                    
-                  ) : (
-                    <>
-                      Name:No Name,
-                      {" "}
-                    </>
-                  )}
-                  </div>
-                  <div>
-                  {contact.url ? (
-                    <>
-                      URL:
-                      {contact.url},
-                      {" "}
-                    </>
-                  ) : (
-                    <>
-                      URL:No URL,
-                      {" "}
-                    </>
-                  )}
-                  </div>
-                  <div>
-                  {contact.description ? (
-                    <>
-                      Description:
-                      {contact.description},
-                      {" "}
-                    </>
-                  ) : (
-                    <>
-                      Description:No Description,
-                      {" "}
-                    </>
-                  )}
-                  </div>
-                </NavLink>
-              </li>
-              <div class="spacer"></div>
-              </>
-            ))}
-          </ul>
-        </>
+          <>
+            <div className="mb-3"></div>
+            <ul className="list-group">
+              {contacts.map((contact) => (
+                <li key={contact.id} className="list-group-item">
+                  <NavLink
+                    to={`./creators/${contact.id}`}
+                    className={({ isActive, isPending }) =>
+                      isActive ? "list-group-item active" : isPending ? "list-group-item pending" : "list-group-item"
+                    }
+                  >
+                    <div>
+                      <strong>Name:</strong>{" "}
+                      {contact.name ? contact.name : "No Name"}
+                    </div>
+                    <div>
+                      <strong>URL:</strong>{" "}
+                      {contact.url ? contact.url : "No URL"}
+                    </div>
+                    <div>
+                      <strong>Description:</strong>{" "}
+                      {contact.description ? contact.description : "No Description"}
+                    </div>
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+          </>
         ) : (
           <p>
             <i>No contacts</i>
@@ -102,6 +58,6 @@ export default function Root() {
         )}
       </nav>
       <Outlet />
-    </>
+    </div>
   );
 }
