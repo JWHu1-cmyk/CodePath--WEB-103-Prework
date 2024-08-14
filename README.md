@@ -1,5 +1,7 @@
 
 ```
+`git push -f origin main`
+
 main.jsx is the main file;
 
 run command 
